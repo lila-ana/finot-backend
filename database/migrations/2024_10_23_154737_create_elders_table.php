@@ -24,6 +24,7 @@ class CreateEldersTable extends Migration
             $table->text('bio')->nullable(); // Brief biography
             $table->string('unique_identifier')->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

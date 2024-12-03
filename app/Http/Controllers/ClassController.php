@@ -25,7 +25,8 @@ class ClassController extends Controller
             'class_name' => 'required|string|max:255|unique:classes',
             'description' => 'nullable|string',
             'max_capacity' => 'nullable|integer',
-            'class_type' => 'nullable|string|in:adult,youth,children,bible_study',
+            // 'class_type' => 'nullable|string|in:adult,youth,children,bible_study',
+            'class_type' => 'nullable|string|max:255',
             'schedule' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
         ]);
@@ -56,7 +57,8 @@ class ClassController extends Controller
             'class_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'max_capacity' => 'nullable|integer',
-            'class_type' => 'nullable|string|in:adult,youth,children,bible_study',
+            // 'class_type' => 'nullable|string|in:adult,youth,children,bible_study',
+            'class_type' => 'nullable|string|max:255',
             'schedule' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
         ]);

@@ -31,13 +31,16 @@ return new class extends Migration
             $table->string('emergency_contact_phone');
             $table->string('profile_picture')->nullable();
             $table->text('notes_comments')->nullable();
-            $table->boolean('data_protection_consent')->default(false);
-            $table->boolean('media_release_consent')->default(false);
+            $table->boolean('data_protection_consent')->default(false)->nullable();
+            $table->boolean('media_release_consent')->default(false)->nullable();
+            $table->string('profession_detail')->nullable();
+            $table->string('blood_type')->nullable();
             $table->string('unique_identifier')->unique();
             $table->string('elder_id')->nullable()->index();  // Adjust data type if necessary
             $table->string('class_id')->nullable()->index(); 
-            $table->timestamp('deleted_at')->nullable(); 
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

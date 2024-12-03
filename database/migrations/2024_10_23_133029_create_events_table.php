@@ -26,6 +26,8 @@ class CreateEventsTable extends Migration
             $table->string('contact_info')->nullable();
             $table->enum('status', ['scheduled', 'completed', 'cancelled'])->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

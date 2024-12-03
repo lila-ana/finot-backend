@@ -18,6 +18,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'role' => 'required|string|exists:roles,name', 
         ]);
 
         if ($validator->fails()) {
@@ -30,6 +31,8 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $user->assignRole($request->role);
 
         // Generate a longer, more secure token with an expiration date
         $token = $user->createToken('auth_token', ['*'], now()->addHours(8))->plainTextToken;
@@ -67,12 +70,18 @@ class AuthController extends Controller
             now()->addHours(8)
         )->plainTextToken;
 
+        // Include roles and permissions
+    $roles = $user->getRoleNames(); // Returns a collection of role names
+    $permissions = $user->getAllPermissions()->pluck('name'); // Returns a collection of permission names
+
         // Return the token, expiration, and user data
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
             'expires_at' => now()->addHours(8)->toDateTimeString(),
             'user' => $user,
+            'roles' => $roles,
+            'permissions' => $permissions,
         ]);
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('attendance_id')->primary();
             $table->uuid('elder_id'); // Foreign key for elder
             $table->uuid('class_id'); // Foreign key for class
+            $table->uuid('member_id');
             $table->boolean('attended')->default(false); // Flag for attendance
             $table->timestamps();
 
