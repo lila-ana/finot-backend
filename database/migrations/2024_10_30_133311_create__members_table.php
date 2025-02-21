@@ -28,6 +28,7 @@ return new class extends Migration
             $table->text('areas_of_interest')->nullable(); // Store as JSON or a serialized array
             $table->text('spiritual_gifts')->nullable();
             $table->string('emergency_contact_name');
+            $table->string('emergency_contact_relation');
             $table->string('emergency_contact_phone');
             $table->string('profile_picture')->nullable();
             $table->text('notes_comments')->nullable();

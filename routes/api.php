@@ -27,6 +27,9 @@ Route::post('/members', [MemberController::class, 'store']); // Create a new mem
 Route::get('/members/{id}', [MemberController::class, 'show']); // Get a specific member
 Route::put('/members/{id}', [MemberController::class, 'update']); // Update a specific member
 Route::delete('/members/{id}', [MemberController::class, 'destroy']); // Delete a specific member
+Route::post('/import-members', [MemberController::class, 'importMember']);
+
+
 
 //Attendance routes
 Route::get('/attendances', [AttendanceController::class, 'index']);     // Get all attendances

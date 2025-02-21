@@ -37,6 +37,7 @@ class Member extends Model
         'areas_of_interest',
         'spiritual_gifts',
         'emergency_contact_name',
+        'emergency_contact_relation',
         'emergency_contact_phone',
         'profile_picture',
         'notes_comments',
@@ -44,8 +45,8 @@ class Member extends Model
         'media_release_consent',
         'profession_detail',
         'blood_type',
-        'unique_identifier',  // Add unique_identifier to fillable attributes
-        'elder_id',  // Foreign key for Elder
+        'unique_identifier',  
+        'elder_id',  
         'class_id',
     ];
 
