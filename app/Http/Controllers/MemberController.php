@@ -17,16 +17,41 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $members = Member::with(['elder', 'class'])->whereNull('deleted_at')->get();
 
-        return response()->json([
-            'message' => 'Members retrieved successfully.',
-            'count' => $members->count(),
-            'items' => $members,
-        ], 200);
-    }
+    public function index()
+{
+    // Retrieve members with related models and filter by attendance using the scope
+    $members = Member::with(['elder', 'class', 'attendances'])->whereNull('deleted_at')->get();
+
+    // Get today's date
+    $today = Carbon::today();
+
+    // Use the attendedToday scope to get members who attended today
+    $members->each(function ($member) use ($today) {
+        // Ensure the attendances relationship is loaded and is not null
+        if ($member->attendances && $member->attendances->isNotEmpty()) {
+            // Filter the attendances for those that occurred today
+            $attendedToday = $member->attendances->filter(function ($attendance) use ($today) {
+                return Carbon::parse($attendance->created_at)->isToday();
+            });
+
+            // Add the attended field to the member
+            $member->attended = $attendedToday->isNotEmpty();
+        } else {
+            // If no attendances are available, mark as not attended
+            $member->attended = false;
+        }
+    });
+
+    return response()->json([
+        'message' => 'Members retrieved successfully.',
+        'count' => $members->count(),
+        'items' => $members,
+    ], 200);
+}
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -126,10 +151,16 @@ class MemberController extends Controller
             if ($member->trashed()) {
                 return response()->json(['message' => 'Member is deleted.'], 404);
             }
+            
+            $today = Carbon::today();
+
+            $attendedToday = $member->attended()->whereDate('attended_at', $today)->get();
 
             return response()->json([
                 "message" => "Single member fetched successfully.",
                 "member" => $member,
+                "attended_today" => $attendedToday,
+
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Member not found.'], 404);

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Member extends Model
 {
@@ -76,7 +77,7 @@ class Member extends Model
     // Define relationships
     public function attendances()
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class, 'member_id');
     }
 
      public function elder()
@@ -89,5 +90,9 @@ class Member extends Model
        return $this->belongsTo(ClassModel::class, 'class_id', 'class_id'); 
     }
 
+    public function scopeAttendedToday($query)
+    {
+       return $query->whereDate('created_at', Carbon::today());
+    }
 
 }

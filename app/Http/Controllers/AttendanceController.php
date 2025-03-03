@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -24,22 +25,39 @@ class AttendanceController extends Controller
         return response()->json($attendance);
     }
 
-    // Store a new attendance
+    // Store a new attendance (or update if already exists for today)
     public function store(Request $request)
     {
-        
-
+        // Validate the incoming data
         $validated = $request->validate([
-            'elder_id' => 'required|exists:elders,elder_id',
-            'class_id' => 'required|exists:classes,class_id', // Change to the correct column name if needed
-            'member_id' => 'required|exists:members,member_id', // Change to the correct column name if needed
+            'elder_id' => 'exists:elders,elder_id',
+            'class_id' => 'exists:classes,class_id', // Ensure the correct column name
+            'member_id' => 'required|exists:members,member_id', // Ensure the correct column name
             'attended' => 'required|boolean',
         ]);
 
+        // Get today's date
+        $today = Carbon::today()->toDateString();
 
-        $attendance = Attendance::create($validated);
+        // Check if the attendance record for the member exists for today
+        $attendance = Attendance::where('member_id', $validated['member_id'])
+                                 ->whereDate('created_at', $today)
+                                 ->first();
 
-        return response()->json($attendance, 201);
+        if ($attendance) {
+            // If it exists, update the 'attended' status
+            $attendance->update([
+                'attended' => $validated['attended'],
+            ]);
+
+            return response()->json($attendance, 200); // Return the updated record
+        } else {
+            // If no attendance record exists for today, create a new one
+            $validated['created_at'] = $today; // Ensure the created_at date is today
+            $attendance = Attendance::create($validated);
+
+            return response()->json($attendance, 201); // Return the newly created record
+        }
     }
 
     // Update an existing attendance
