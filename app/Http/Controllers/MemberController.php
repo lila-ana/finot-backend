@@ -152,14 +152,14 @@ class MemberController extends Controller
                 return response()->json(['message' => 'Member is deleted.'], 404);
             }
             
-            $today = Carbon::today();
+            // $today = Carbon::today();
 
-            $attendedToday = $member->attended()->whereDate('attended_at', $today)->get();
+            // $attendedToday = $member->attended()->whereDate('created_at', $today)->get();
 
             return response()->json([
                 "message" => "Single member fetched successfully.",
                 "member" => $member,
-                "attended_today" => $attendedToday,
+                // "attended_today" => $attendedToday,
 
             ]);
         } catch (ModelNotFoundException $e) {
